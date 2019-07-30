@@ -1,14 +1,23 @@
 # flutter_forbidshot
 
-A new Flutter plugin.
+A Flutter plugin to prevent capture and record screen on ios and android.
 
-## Getting Started
+## Setup
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+```
+flutter_forbidshot:
+    git:
+      url: https://github.com/qq326646683/flutter_forbidshot.git
+```
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+## Usage
+
+```
+1.初始化
+FlutterForbidshot.iosIsCaptured
+```
+
+## Example
+``` dart
+
+```
