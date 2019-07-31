@@ -1,6 +1,5 @@
 # flutter_forbidshot
-[![pub package](https://img.shields.io/pub/v/flutter_forbidshot.svg)](https://pub.dartlang.org/packages/screen)
-A Flutter plugin to manage the device's screen on Android and iOS.
+[![pub package](https://img.shields.io/pub/v/flutter_forbidshot.svg)](https://pub.dev/packages/flutter_forbidshot)
 A Flutter plugin to prevent capture and record screen on ios and android.
 
 ## Setup
