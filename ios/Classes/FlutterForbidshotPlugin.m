@@ -1,18 +1,22 @@
 #import "FlutterForbidshotPlugin.h"
+#import <AVKit/AVKit.h>
+#import <MediaPlayer/MediaPlayer.h>
 
 @interface FlutterForbidshotPlugin () <FlutterStreamHandler>
 @end
 
 @implementation FlutterForbidshotPlugin {
     FlutterEventSink _eventSink;
+    MPVolumeView *volumeView;
+    UISlider *volumeViewSlider;
 }
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
     FlutterForbidshotPlugin* instance = [[FlutterForbidshotPlugin alloc] init];
     FlutterMethodChannel* channel = [FlutterMethodChannel methodChannelWithName:@"flutter_forbidshot"
             binaryMessenger:[registrar messenger]];
     [registrar addMethodCallDelegate:instance channel:channel];
-    
-    
+
+
     FlutterEventChannel* changeChannel = [FlutterEventChannel eventChannelWithName:@"flutter_forbidshot_change" binaryMessenger:[registrar messenger]];
     [changeChannel setStreamHandler: instance];
 
@@ -22,8 +26,17 @@
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
   if([@"isCaptured" isEqualToString:call.method]) {
-      [self initScreen: result];
-  } else {
+    [self initScreen: result];
+  }
+  else if ([@"volume" isEqualToString:call.method]) {
+    [self getVolume: result];
+  }
+  else if ([@"setVolume" isEqualToString:call.method]) {
+    NSNumber *volume = call.arguments[@"volume"];
+    [self setSystemVolume: volume];
+    result(nil);
+  }
+  else {
     result(FlutterMethodNotImplemented);
   }
 }
@@ -38,7 +51,19 @@
         }
     }
     result([NSNumber numberWithBool: FALSE]);
-    
+
+}
+
+- (void)getVolume:(FlutterResult)result {
+   AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+   CGFloat currentVol = audioSession.outputVolume;
+   NSLog(@"system volume = %.0f",currentVol);
+    result(@(currentVol));
+}
+
+- (void)setSystemVolume: (NSNumber*)volume {
+    MPMusicPlayerController* musicController = [MPMusicPlayerController applicationMusicPlayer];
+    musicController.volume = volume.floatValue;
 }
 
 
