@@ -1,6 +1,7 @@
 #import "FlutterForbidshotPlugin.h"
 #import <AVKit/AVKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import <AVKit/AVKit.h>
 
 @interface FlutterForbidshotPlugin () <FlutterStreamHandler>
 @end
@@ -8,7 +9,7 @@
 @implementation FlutterForbidshotPlugin {
     FlutterEventSink _eventSink;
     MPVolumeView *volumeView;
-    UISlider *volumeViewSlider;
+    MPMusicPlayerController* musicController;
 }
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
     FlutterForbidshotPlugin* instance = [[FlutterForbidshotPlugin alloc] init];
@@ -55,14 +56,24 @@
 }
 
 - (void)getVolume:(FlutterResult)result {
-   AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-   CGFloat currentVol = audioSession.outputVolume;
-   NSLog(@"system volume = %.0f",currentVol);
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    CGFloat currentVol = audioSession.outputVolume;
+    NSLog(@"system volume = %.0f",currentVol);
+
+    //去掉系统音量ui
+    if (volumeView == nil) {
+        volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-100, 0, 10, 10)];
+        UIWindow *window = UIApplication.sharedApplication.keyWindow;
+        [window addSubview:volumeView];
+    }
+
     result(@(currentVol));
 }
 
 - (void)setSystemVolume: (NSNumber*)volume {
-    MPMusicPlayerController* musicController = [MPMusicPlayerController applicationMusicPlayer];
+    if (musicController == nil) {
+        musicController = [MPMusicPlayerController applicationMusicPlayer];
+    }
     musicController.volume = volume.floatValue;
 }
 
